@@ -1,21 +1,25 @@
 package pro.skystudent.streamandoptional.service.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import pro.skystudent.streamandoptional.data.Employee;
 import pro.skystudent.streamandoptional.exceptions.*;
 import pro.skystudent.streamandoptional.service.EmployeeService;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
     private static int size;
-    private Map<String, Employee> employeeBook = new HashMap<>();
+    private Map<String, Employee> employeeBook;
 
     @Override
     public Employee addEmployee(String firstName, String lastName) {
+        checkNames(firstName, lastName);
+
+        firstName = StringUtils.capitalize(firstName.toLowerCase());
+        lastName = StringUtils.capitalize(lastName.toLowerCase());
+
         Employee newEmployee = new Employee(firstName, lastName);
         if (employeeBook.containsKey(firstName + lastName)) {
             throw new EmployeeAlreadyExistException("This employee already exists");
@@ -24,6 +28,12 @@ public class EmployeeServiceImpl implements EmployeeService {
             size++;
             return newEmployee;
         }
+    }
+
+    private void checkNames(String firstName, String lastName) {
+        if (!StringUtils.isAlpha(firstName) || !StringUtils.isAlpha(lastName)){
+            throw new InvalidOrMissingNameException("Name Error!");
+            }
     }
 
     public EmployeeServiceImpl() {
@@ -66,6 +76,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (!employeeBook.containsKey(firstName + lastName)) {
             throw new EmployeeIsMissingException("This employee is missing");
         }
+        checkNames(firstName, lastName);
+
+        firstName = StringUtils.capitalize(firstName.toLowerCase());
+        lastName = StringUtils.capitalize(lastName.toLowerCase());
+
         return employeeBook.get(firstName + lastName);
     }
 
@@ -73,6 +88,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (!employeeBook.containsKey(firstName + lastName)) {
             throw new EmployeeIsMissingException("Cannot delete missing employee");
         }
+        checkNames(firstName, lastName);
+
+        firstName = StringUtils.capitalize(firstName.toLowerCase());
+        lastName = StringUtils.capitalize(lastName.toLowerCase());
+
         employeeBook.remove(firstName + lastName);
         size--;
         return employeeBook.get(firstName + lastName);
@@ -80,7 +100,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Collection<Employee> printAllEmployees() {
-        if (size == 0) {
+        if (employeeBook.size() == 0) {
             throw new NoEmployeesInListException("Employee list is empty");
         }
         return employeeBook.values();

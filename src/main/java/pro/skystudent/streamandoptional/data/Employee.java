@@ -1,6 +1,9 @@
 package pro.skystudent.streamandoptional.data;
 
 
+import org.apache.commons.lang3.StringUtils;
+import pro.skystudent.streamandoptional.exceptions.InvalidOrMissingNameException;
+
 public class Employee {
     private String firstName;
     private String lastName;
@@ -48,8 +51,9 @@ public class Employee {
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+            this.lastName = lastName;
+        }
+
 
     @Override
     public boolean equals(Object o) {
