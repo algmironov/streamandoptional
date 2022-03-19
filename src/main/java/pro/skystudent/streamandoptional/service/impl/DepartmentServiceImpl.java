@@ -41,11 +41,13 @@ public class DepartmentServiceImpl implements DepartmentService {
     public Collection<Employee> printEmployeesFromDepartment(int departmentId) {
        return employeeService.printAllEmployees().stream().
                filter(e -> e.getDepartmentId() == departmentId).
-               collect(Collectors.toList());
+               collect(Collectors.toList())
+               ;
     }
 
     public Map<Integer, List<Employee>> printAllEmployeesByDepartment() {
        return employeeService.printAllEmployees().stream().
-               collect(Collectors.groupingBy(Employee::getDepartmentId));
+               collect(Collectors.groupingBy(Employee::getDepartmentId))
+               ;
         }
 }
